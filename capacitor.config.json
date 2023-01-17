@@ -1,0 +1,6 @@
+{
+	"appId": "io.ionic.starter",
+	"appName": "beautyfruit",
+	"webDir": "www",
+	"bundledWebRuntime": false
+}
