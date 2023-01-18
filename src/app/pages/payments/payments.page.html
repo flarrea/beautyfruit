@@ -1,9 +1,33 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>payments</ion-title>
+  <ion-toolbar color="danger">
+
+    <ion-title>
+      Card Details
+    </ion-title>
+
+    <ion-button color="dark" size="small" slot="end" [routerLink]="['/tabs/products']">
+      Products <ion-icon name="home"></ion-icon>
+    </ion-button>
+
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
 
+  <div class="ion-padding">
+    
+    <ion-input [(ngModel)]="cardInfo.number" placeholder="Card Number"></ion-input>
+    <ion-input [(ngModel)]="cardInfo.expMonth" placeholder="Expiration Month"></ion-input>
+    <ion-input [(ngModel)]="cardInfo.expYear" placeholder="Expiration Year"></ion-input>
+    <ion-input [(ngModel)]="cardInfo.cvc" placeholder="cvc"></ion-input>
+  
+  
+    <ion-button expand="full" color="dark" (click)="pay()">
+      Pay with Stripe 
+    </ion-button>
+
+    <b>Es: {{ amount }}</b>
+    <b>Es: {{ myID }}</b>
+  </div>
 </ion-content>
+
