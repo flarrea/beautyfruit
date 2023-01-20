@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { LoadingController } from '@ionic/angular';
 import { Router } from '@angular/router'
-import { InteractionService } from 'src/app/services/interaction.service';
+import { InteractionService } from '../../services/interaction.service';
 import { AlertController } from '@ionic/angular';
 import { Observable, throwError } from 'rxjs';
 
@@ -59,15 +59,15 @@ export class PaymentsPage implements OnInit {
   ngOnInit() {
   }
 
-  async pay() {
+  pay() {
 
   console.log(this.myID);
 
-  //this.presentLoading();
-  this.interaction.presentLoading('Connecting...')
-
     this.stripe.setPublishableKey('pk_test_51HwPVhK62ac5yRiIJf0Zvff08TYVxAcSuyNyYKKrxy4V1gJHZ2Mwl6REj28mmSokGmBWn4GxcQfCZXpsdPbUWaWK00MLAoBe6J');
-    await this.stripe.createCardToken(this.cardInfo).then((token) => {
+
+    this.stripe.createCardToken(this.cardInfo).then((token) => {
+
+    this.interaction.presentLoading('Connecting...')
     
     console.log(token);
 
@@ -89,32 +89,49 @@ export class PaymentsPage implements OnInit {
     let paydata = { stripeToken: token.id, amount: this.amount, currency: this.currency, name:this.name, email:this.email, myID:this.myID };
         
 
-    let url = 'https://c7b5-190-13-178-90.ngrok.io/charge';
+    let url = 'https://1668-190-13-178-90.ngrok.io/charge';
 
 
 
-    this.http.post(url, JSON.stringify(paydata), {headers: headers }).pipe(retry(1), catchError(this.handleError)).subscribe((res) => {
-       
-        //if (res){
+    this.http.post(url, JSON.stringify(paydata), {headers: headers })
+    .pipe(retry(1), catchError(this.handleError))
+/*
+    .subscribe((res) => {
 
-          //this.loadingController.dismiss();
           this.interaction.closeLoading();
           this.interaction.presentToast('Successfully Connection')
           this.presentAlert();
-          //catchError(this.handleError)
-          
-        //}else{
-
-          //this.loadingController.dismiss();
-          //this.interaction.closeLoading();
-          //this.interaction.presentToast('Fail Connection')
-          //this.presentError();
-
-        //};
       
+      },error => {
+        console.log(error);
+        this.interaction.closeLoading();
+        this.interaction.presentToast('Fail Connection Server')
+        this.presentError();
       })
+*/
+.subscribe(
+	{
+	  next: res => {
 
-    })
+          this.interaction.closeLoading();
+          this.interaction.presentToast('Successfully Connection')
+          this.presentAlert();
+      
+        },
+	  error: err => {
+          console.log(err.error);
+          this.interaction.closeLoading();
+          this.interaction.presentToast('Fail Connection Server')
+          this.presentError();
+	}
+        });
+//
+    }).catch(error => {
+          console.log(error);
+          this.interaction.closeLoading();
+          this.interaction.presentToast('Fail Connection Card Token')
+          this.presentError();
+           });
 
   };
 
@@ -143,7 +160,7 @@ export class PaymentsPage implements OnInit {
         {
           text: 'OK',
           handler: () => {
-            this.router.navigate(['/cancel']);
+            this.router.navigate(['/payments']);
           }
         }
       ]
@@ -157,39 +174,39 @@ export class PaymentsPage implements OnInit {
     });
     return await loading.present();
   }
-/*
-  handleError(error: HttpErrorResponse) {
-    if (error.error instanceof ErrorEvent) {
-      // A client-side or network error occurred. Handle it accordingly.
-      console.error('An error occurred:', error.error.message);
-    } else {
-      // The backend returned an unsuccessful response code.
-      // The response body may contain clues as to what went wrong,
-      console.error(
-        `Backend returned code ${error.status}, ` +
-        `body was: ${error.error}`);
-    }
-    // return an observable with a user-facing error message
-    return throwError(
-      'Something bad happened; please try again later.');
-  };
-  */
-  
-  //handleError(error:any) {
-    handleError(error: HttpErrorResponse) {
+
+    private handleError(error: HttpErrorResponse) {
+    this.interaction.closeLoading();
+    this.interaction.presentToast('Fail Connection')
+    this.presentError();  
     let errorMessage = 'Something bad happened; please try again later.';
     if (error.error instanceof ErrorEvent) {
       // client-side error
       errorMessage = `Error: ${error.error.message}`;
     } else {
       // server-side error
-      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+      //errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+      switch (error.status) {
+        case 404: {
+            return `Not Found: ${error.message}`;
+        }
+        case 403: {
+            return `Access Denied: ${error.message}`;
+        }
+        case 500: {
+            return `Internal Server Error: ${error.message}`;
+        }
+        default: {
+            return `Unknown Server Error: ${error.message}`;
+        }
+      }
+
     }
     console.log(errorMessage);
     return throwError(() => {
         return errorMessage;
     });
   }
+  
 
 }
-
