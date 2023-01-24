@@ -42,7 +42,7 @@ export class CartviewPage implements OnInit {
     this.cart = this.cartService.getCart();
 
     this.networkListener = await Network.addListener('networkStatusChange', status => {
-      console.log('Network status changed', status);
+
       this.ngZone.run(() => {
         this.changeStatus(status);
       })
@@ -50,11 +50,7 @@ export class CartviewPage implements OnInit {
     
       const status = await Network.getStatus();
 
-      console.log('Network status:', status);
-
-      this.changeStatus(status);
-    
-      console.log('Network status:', this.status);
+      this.changeStatus(status);  
   }
 
   changeStatus(status: ConnectionStatus){
@@ -81,7 +77,6 @@ export class CartviewPage implements OnInit {
  
   getTotal() {
     this.myTotal = this.cart.reduce((i, j) => i + j.price * j.qty, 0);
-    console.log(this.myTotal);
     return this.myTotal;  
   }
  
@@ -94,9 +89,6 @@ export class CartviewPage implements OnInit {
     this.close();
     
     this.cartService.restartCartItemCount();
-
-    //
-    //if (this.cart.length != 0) {
 
       if (this.cart.length > 0) {
 
@@ -121,8 +113,6 @@ export class CartviewPage implements OnInit {
       
      }
 
-    console.log(this.order);
-
     const initialValue = {};
 
     const reducer = function( accumulator, element, index ) {
@@ -134,8 +124,6 @@ export class CartviewPage implements OnInit {
 
    const result: Order =this.order.reduce( reducer, initialValue );
 
-   console.log(result);
-
    this.interaction.presentLoading('Saving...')
 
    const path = 'Orders'
@@ -146,17 +134,12 @@ export class CartviewPage implements OnInit {
 
    result.id = id;
 
-   console.log(result.id);
-
    const _id = id;
-
-   console.log(_id);
 
    result.timestamp = timestamp;
 
    this.database.createDoc(result, path, id).then( () => {
 
-     console.log('Save OK ->');
      this.interaction.closeLoading();
      this.interaction.presentToast('Saved successfully')
 
@@ -165,8 +148,7 @@ export class CartviewPage implements OnInit {
       this.router.navigate(['/payments', {total:this.myTotal, my_ID:_id}]);
 
     }else{
-      console.log('No Save ->');
-      //this.interaction.closeLoading();
+
       this.cartService.restartCartItemCount();
 
       this.interaction.presentToast('Empty record')
@@ -174,9 +156,6 @@ export class CartviewPage implements OnInit {
       this.router.navigate(['tabs/products']);
     }
 
-   //
-
-    //this.router.navigate(['/payments', {total:this.myTotal, my_ID:this._id}]);
   }
 
   cleanShopCart(){

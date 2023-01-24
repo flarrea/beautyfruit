@@ -38,10 +38,6 @@ export class ProductsPage {
     this.cartService.addProduct(product);
     console.log(typeof product);
     
-    console.log(product.id); //Agrego el objeto product o el ítem id
-   
-    console.log(product.name);
-    console.log(product.price);
     this.animateCSS('tada');
   }
 

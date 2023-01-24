@@ -61,28 +61,17 @@ export class PaymentsPage implements OnInit {
 
   pay() {
 
-  console.log(this.myID);
-
     this.stripe.setPublishableKey('pk_test_51HwPVhK62ac5yRiIJf0Zvff08TYVxAcSuyNyYKKrxy4V1gJHZ2Mwl6REj28mmSokGmBWn4GxcQfCZXpsdPbUWaWK00MLAoBe6J');
 
     this.stripe.createCardToken(this.cardInfo).then((token) => {
 
     this.interaction.presentLoading('Connecting...')
-    
-    console.log(token);
 
     const { id } = token;
-
-    console.log(id);
 
     var purchaseID = id;
 
     this.StripeTokenID = purchaseID;
-
-    console.log(this.StripeTokenID);
-
-    console.log(this.myID);
-
  
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
 
@@ -95,39 +84,22 @@ export class PaymentsPage implements OnInit {
 
     this.http.post(url, JSON.stringify(paydata), {headers: headers })
     .pipe(retry(1), catchError(this.handleError))
-/*
-    .subscribe((res) => {
-
-          this.interaction.closeLoading();
-          this.interaction.presentToast('Successfully Connection')
-          this.presentAlert();
-      
-      },error => {
-        console.log(error);
-        this.interaction.closeLoading();
-        this.interaction.presentToast('Fail Connection Server')
-        this.presentError();
-      })
-*/
-.subscribe(
+    .subscribe(
 	{
 	  next: res => {
-
           this.interaction.closeLoading();
           this.interaction.presentToast('Successfully Connection')
           this.presentAlert();
       
         },
 	  error: err => {
-          console.log(err.error);
           this.interaction.closeLoading();
           this.interaction.presentToast('Fail Connection Server')
           this.presentError();
 	}
         });
-//
+
     }).catch(error => {
-          console.log(error);
           this.interaction.closeLoading();
           this.interaction.presentToast('Fail Connection Card Token')
           this.presentError();
@@ -202,11 +174,8 @@ export class PaymentsPage implements OnInit {
       }
 
     }
-    console.log(errorMessage);
     return throwError(() => {
         return errorMessage;
     });
   }
-  
-
 }
