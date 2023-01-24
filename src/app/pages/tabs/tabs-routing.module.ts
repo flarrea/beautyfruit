@@ -7,22 +7,22 @@ const routes: Routes = [
   {
     path: 'tabs',
     component: TabsPage,
-    children:[
+    children: [
       {
         path: 'products',
-        loadChildren: () => import('../../pages/products/products.module').then( m => m.ProductsPageModule)
+        loadChildren: () => import('../../pages/products/products.module').then(m => m.ProductsPageModule)
       },
       {
         path: 'profile',
-        loadChildren: () => import('../../pages/profile/profile.module').then( m => m.ProfilePageModule)
+        loadChildren: () => import('../../pages/profile/profile.module').then(m => m.ProfilePageModule)
       },
       {
         path: 'favorites',
-        loadChildren: () => import('../../pages/favorites/favorites.module').then( m => m.FavoritesPageModule)
+        loadChildren: () => import('../../pages/favorites/favorites.module').then(m => m.FavoritesPageModule)
       },
       {
         path: 'cartview',
-        loadChildren: () => import('../../pages/cartview/cartview.module').then( m => m.CartviewPageModule)
+        loadChildren: () => import('../../pages/cartview/cartview.module').then(m => m.CartviewPageModule)
       },
     ]
   },
@@ -37,4 +37,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class TabsPageRoutingModule {}
+export class TabsPageRoutingModule { }

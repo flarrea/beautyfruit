@@ -9,9 +9,9 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 
 import { Stripe } from '@ionic-native/stripe/ngx';
 
-import {ActivatedRoute} from '@angular/router'
+import { ActivatedRoute } from '@angular/router'
 
-import { FirestoreService }  from '../../services/firestore.service';
+import { FirestoreService } from '../../services/firestore.service';
 
 import { retry, catchError } from 'rxjs/operators';
 
@@ -24,14 +24,14 @@ import { retry, catchError } from 'rxjs/operators';
 })
 export class PaymentsPage implements OnInit {
 
-  myID:string;
+  myID: string;
 
-  StripeTokenID:string;
+  StripeTokenID: string;
 
-  email:string = "test@test.com";
-  name:string = " John Dow";
+  email: string = "test@test.com";
+  name: string = " John Dow";
 
-  amount:any;
+  amount: any;
   currency: string = 'USD';
   currencyIcon: string = '$';
 
@@ -47,67 +47,81 @@ export class PaymentsPage implements OnInit {
   constructor(private stripe: Stripe,
     private alertCtrl: AlertController,
     public http: HttpClient,
-    public activatedRoute:ActivatedRoute,
+    public activatedRoute: ActivatedRoute,
     private router: Router,
     public loadingController: LoadingController,
     private database: FirestoreService,
-    private interaction: InteractionService) { 
+    private interaction: InteractionService) {
     this.amount = ((this.activatedRoute.snapshot.paramMap.get('total')));
     this.myID = ((this.activatedRoute.snapshot.paramMap.get('my_ID')));
-    }
+  }
 
   ngOnInit() {
   }
 
   pay() {
 
+    console.log(this.myID);
+
     this.stripe.setPublishableKey('pk_test_51HwPVhK62ac5yRiIJf0Zvff08TYVxAcSuyNyYKKrxy4V1gJHZ2Mwl6REj28mmSokGmBWn4GxcQfCZXpsdPbUWaWK00MLAoBe6J');
 
     this.stripe.createCardToken(this.cardInfo).then((token) => {
 
-    this.interaction.presentLoading('Connecting...')
+      this.interaction.presentLoading('Connecting...')
 
-    const { id } = token;
+      console.log(token);
 
-    var purchaseID = id;
+      const { id } = token;
 
-    this.StripeTokenID = purchaseID;
- 
-    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+      console.log(id);
 
-    let paydata = { stripeToken: token.id, amount: this.amount, currency: this.currency, name:this.name, email:this.email, myID:this.myID };
-        
+      var purchaseID = id;
 
-    let url = 'https://0fc7-190-13-178-90.ngrok.io/charge';
+      this.StripeTokenID = purchaseID;
+
+      console.log(this.StripeTokenID);
+
+      console.log(this.myID);
+
+
+      const headers = new HttpHeaders().set('Content-Type', 'application/json');
+
+      let paydata = { stripeToken: token.id, amount: this.amount, currency: this.currency, name: this.name, email: this.email, myID: this.myID };
+
+
+      let url = 'https://0fc7-190-13-178-90.ngrok.io/charge';
 
 
 
-    this.http.post(url, JSON.stringify(paydata), {headers: headers })
-    .pipe(retry(1), catchError(this.handleError))
-    .subscribe(
-	{
-	  next: res => {
-          this.interaction.closeLoading();
-          this.interaction.presentToast('Successfully Connection')
-          this.presentAlert();
-      
-        },
-	  error: err => {
-          this.interaction.closeLoading();
-          this.interaction.presentToast('Fail Connection Server')
-          this.presentError();
-	}
-        });
+      this.http.post(url, JSON.stringify(paydata), { headers: headers })
+        .pipe(retry(1), catchError(this.handleError))
+        .subscribe(
+          {
+            next: res => {
+
+              this.interaction.closeLoading();
+              this.interaction.presentToast('Successfully Connection')
+              this.presentAlert();
+
+            },
+            error: err => {
+              console.log(err.error);
+              this.interaction.closeLoading();
+              this.interaction.presentToast('Fail Connection Server')
+              this.presentError();
+            }
+          });
 
     }).catch(error => {
-          this.interaction.closeLoading();
-          this.interaction.presentToast('Fail Connection Card Token')
-          this.presentError();
-           });
+      console.log(error);
+      this.interaction.closeLoading();
+      this.interaction.presentToast('Fail Connection Card Token')
+      this.presentError();
+    });
 
   };
 
-  async presentAlert() {   
+  async presentAlert() {
 
     let alert = await this.alertCtrl.create({
       header: 'Order Success',
@@ -124,7 +138,7 @@ export class PaymentsPage implements OnInit {
     alert.present();
   };
 
-  async presentError(){
+  async presentError() {
     let alert = await this.alertCtrl.create({
       header: 'Order Fail',
       message: 'We cant send the order',
@@ -140,17 +154,17 @@ export class PaymentsPage implements OnInit {
     alert.present();
   };
 
-  async presentLoading(){
+  async presentLoading() {
     const loading = await this.loadingController.create({
       message: 'Loading',
     });
     return await loading.present();
   }
 
-    private handleError(error: HttpErrorResponse) {
+  private handleError(error: HttpErrorResponse) {
     this.interaction.closeLoading();
     this.interaction.presentToast('Fail Connection')
-    this.presentError();  
+    this.presentError();
     let errorMessage = 'Something bad happened; please try again later.';
     if (error.error instanceof ErrorEvent) {
       // client-side error
@@ -160,22 +174,25 @@ export class PaymentsPage implements OnInit {
       //errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
       switch (error.status) {
         case 404: {
-            return `Not Found: ${error.message}`;
+          return `Not Found: ${error.message}`;
         }
         case 403: {
-            return `Access Denied: ${error.message}`;
+          return `Access Denied: ${error.message}`;
         }
         case 500: {
-            return `Internal Server Error: ${error.message}`;
+          return `Internal Server Error: ${error.message}`;
         }
         default: {
-            return `Unknown Server Error: ${error.message}`;
+          return `Unknown Server Error: ${error.message}`;
         }
       }
 
     }
+    console.log(errorMessage);
     return throwError(() => {
-        return errorMessage;
+      return errorMessage;
     });
   }
+
+
 }

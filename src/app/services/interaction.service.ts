@@ -12,10 +12,10 @@ export class InteractionService {
     public toastController: ToastController,
     public loadingController: LoadingController
   ) { }
-  async presentToast(messaje:string){
+  async presentToast(messaje: string) {
     const toast = await this.toastController.create({
       message: messaje,
-      duration:2000
+      duration: 2000
     });
     toast.present();
   }
@@ -26,10 +26,10 @@ export class InteractionService {
       message: messaje
     });
     await this.loading.present()
-}
-async closeLoading() {
+  }
+  async closeLoading() {
 
-  await this.loading.dismiss();
-}
+    await this.loading.dismiss();
+  }
 }
 

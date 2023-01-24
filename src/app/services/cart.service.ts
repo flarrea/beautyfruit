@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Product } from '../models/cart';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, lastValueFrom, Observable } from 'rxjs';
 import _ from 'lodash';
 
 @Injectable({
@@ -29,16 +29,18 @@ export class CartService {
     this.cartItemCount.next(0);
   }
 
-  getProducts() {
-    let requestUrl = `${this.baseUrl}/products.json`;
-    return this.http.get(requestUrl).toPromise();
+  public async getProducts() {
+    //let requestUrl = `${this.baseUrl}/products.json`;
+    //return this.http.get(requestUrl).toPromise(); toPromise() is deprecated in rxjs 7
+    var value = this.http.get(`${this.baseUrl}/products.json`);
+    return await lastValueFrom(value);
   }
 
-  getCart(){
+  getCart() {
     return this.cart;
   }
 
-  getCartItemCount(){
+  getCartItemCount() {
     return this.cartItemCount;
   }
 
@@ -56,7 +58,7 @@ export class CartService {
     }
     this.cartItemCount.next(this.cartItemCount.value + 1);
   }
- 
+
   decreaseProduct(product) {
 
     for (let [index, p] of this.cart.entries()) {
@@ -68,9 +70,9 @@ export class CartService {
       }
     }
     this.cartItemCount.next(this.cartItemCount.value - 1);
-    
+
   }
- 
+
   removeProduct(product) {
     for (let [index, p] of this.cart.entries()) {
       if (p.id === product.id) {

@@ -12,38 +12,34 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-searchbar (ionChange)="search($event)"
-  placeholder="Search"
-  clearIcon>
-</ion-searchbar>
+  <ion-searchbar (ionChange)="search($event)" placeholder="Search" clearIcon>
+  </ion-searchbar>
   <ion-list>
     <ion-card *ngFor="let item of products">
-        <ion-card-header>
-          <ion-card-title>{{item.name}}</ion-card-title>
-        </ion-card-header>
-        <ion-img
-        src="{{ item.image }}"
-      ></ion-img>
-        <ion-card-content>
-          <ion-row>
-            <ion-col size="8">
-              <ion-label color="secondary">
-              <!--  <b>{{ item.price | currency: 'CLP' }}</b>--> <!-- USD-->
+      <ion-card-header>
+        <ion-card-title>{{item.name}}</ion-card-title>
+      </ion-card-header>
+      <ion-img src="{{ item.image }}"></ion-img>
+      <ion-card-content>
+        <ion-row>
+          <ion-col size="8">
+            <ion-label color="secondary">
+              <!--  <b>{{ item.price | currency: 'CLP' }}</b>-->
+              <!-- USD-->
               <b>{{ item.price}} USD</b>
-              </ion-label>
-            </ion-col>
-            <ion-col size="4" class="ion-text-right">
-              <ion-button color="dark" size="small" (click)="addToCart(item)">
-                Add
-                <ion-icon name="cart" slot="end"></ion-icon>
-              </ion-button>
-            </ion-col>
-          </ion-row>
-          {{item.description}}
-        </ion-card-content>
+            </ion-label>
+          </ion-col>
+          <ion-col size="4" class="ion-text-right">
+            <ion-button color="dark" size="small" (click)="addToCart(item)">
+              Add
+              <ion-icon name="cart" slot="end"></ion-icon>
+            </ion-button>
+          </ion-col>
+        </ion-row>
+        {{item.description}}
+      </ion-card-content>
     </ion-card>
   </ion-list>
 
-  
-</ion-content>
 
+</ion-content>

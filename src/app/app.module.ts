@@ -34,4 +34,4 @@ import { environment } from '../environments/environment';
   providers: [Stripe, { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

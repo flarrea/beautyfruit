@@ -4,19 +4,19 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: '',
-    loadChildren: () => import('./pages/tabs/tabs.module').then( m => m.TabsPageModule)
+    loadChildren: () => import('./pages/tabs/tabs.module').then(m => m.TabsPageModule)
   },
   {
     path: 'payments',
-    loadChildren: () => import('./pages/payments/payments.module').then( m => m.PaymentsPageModule)
+    loadChildren: () => import('./pages/payments/payments.module').then(m => m.PaymentsPageModule)
   },
   {
     path: 'cancel',
-    loadChildren: () => import('./pages/cancel/cancel.module').then( m => m.CancelPageModule)
+    loadChildren: () => import('./pages/cancel/cancel.module').then(m => m.CancelPageModule)
   },
   {
     path: 'success',
-    loadChildren: () => import('./pages/success/success.module').then( m => m.SuccessPageModule)
+    loadChildren: () => import('./pages/success/success.module').then(m => m.SuccessPageModule)
   },
 ];
 

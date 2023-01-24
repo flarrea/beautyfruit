@@ -19,7 +19,7 @@ export class ProductsPage {
 
   cartItemCount: BehaviorSubject<number>;
 
-  @ViewChild('cart', {static: false, read: ElementRef})fab: ElementRef;
+  @ViewChild('cart', { static: false, read: ElementRef }) fab: ElementRef;
 
   constructor(
     private cartService: CartService,
@@ -29,7 +29,7 @@ export class ProductsPage {
 
   ngOnInit() {
     this.cartService.getProducts()
-    .then(data=> this.products = data);
+      .then(data => this.products = data);
     this.cart = this.cartService.getCart();
     this.cartItemCount = this.cartService.getCartItemCount();
   }
@@ -37,13 +37,17 @@ export class ProductsPage {
   addToCart(product) {
     this.cartService.addProduct(product);
     console.log(typeof product);
-    
+
+    console.log(product.id);
+
+    console.log(product.name);
+    console.log(product.price);
     this.animateCSS('tada');
   }
 
   async openCart() {
     this.animateCSS('bounceOutLeft', true);
- 
+
     let modal = await this.modalCtrl.create({
       component: CartviewPage,
       cssClass: 'cart-modal'
@@ -58,7 +62,7 @@ export class ProductsPage {
   animateCSS(animationName, keepAnimated = false) {
     const node = this.fab.nativeElement;
     node.classList.add('animated', animationName)
-    
+
     function handleAnimationEnd() {
       if (!keepAnimated) {
         node.classList.remove('animated', animationName);
@@ -68,19 +72,19 @@ export class ProductsPage {
     node.addEventListener('animationend', handleAnimationEnd)
   }
 
-    // User typed a search term into the Searchbar
-    search(ev) {
+  // User typed a search term into the Searchbar
+  search(ev) {
     let searchText = ev.detail.value;
-      // 1st filter by category & criteria
-       this.products = _.filter(this.cartService.product);
-      // 2nd filter by searchText (if not empty)
-          if (searchText != '') {
-            this.products = this.products.filter((product) => {
-              return (product.name.toLowerCase()
-                .indexOf(searchText.toLowerCase()) > -1);
-            });
-          }
-       }
+    // 1st filter by category & criteria
+    this.products = _.filter(this.cartService.product);
+    // 2nd filter by searchText (if not empty)
+    if (searchText != '') {
+      this.products = this.products.filter((product) => {
+        return (product.name.toLowerCase()
+          .indexOf(searchText.toLowerCase()) > -1);
+      });
+    }
+  }
 
 
 }
