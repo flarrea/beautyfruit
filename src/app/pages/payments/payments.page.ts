@@ -89,7 +89,7 @@ export class PaymentsPage implements OnInit {
     let paydata = { stripeToken: token.id, amount: this.amount, currency: this.currency, name:this.name, email:this.email, myID:this.myID };
         
 
-    let url = 'https://1668-190-13-178-90.ngrok.io/charge';
+    let url = 'https://0fc7-190-13-178-90.ngrok.io/charge';
 
 
 
