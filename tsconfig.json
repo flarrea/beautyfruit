@@ -19,7 +19,7 @@
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
     "strictTemplates": true,
-    "useDefineForClassFields": true,
+    "useDefineForClassFields": false,
     "target": "ES2022"
   }
 }

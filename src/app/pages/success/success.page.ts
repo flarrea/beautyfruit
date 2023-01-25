@@ -11,7 +11,10 @@ export class SuccessPage implements OnInit {
   constructor(private router: Router) { }
 
   ngOnInit() {
+    console.log("Everything was OK!");
   }
+
+  
 
   backToBuy(){
     this.router.navigate(['/tabs/products']);

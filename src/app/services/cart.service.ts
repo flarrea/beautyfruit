@@ -31,8 +31,8 @@ export class CartService {
 
   public async getProducts() {
     //let requestUrl = `${this.baseUrl}/products.json`;
-    //return this.http.get(requestUrl).toPromise(); toPromise() is deprecated in rxjs 7
-    var value = this.http.get(`${this.baseUrl}/products.json`);
+    //return this.http.get(requestUrl).toPromise(); //toPromise() is deprecated in rxjs 7
+    var value = this.http.get(`${this.baseUrl}/products.json`); // Use Backticks work (``) ALT + 96
     return await lastValueFrom(value);
   }
 
